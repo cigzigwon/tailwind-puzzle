@@ -36,7 +36,16 @@ module.exports = {
         use: [
           env === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
           { loader: 'css-loader', options: { importLoaders: 2, sourceMap: true } },
-          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader', options: {
+            sourceMap: true,
+            postcssOptions: {
+                plugins: [
+                  require('tailwindcss'),
+                  require('autoprefixer'),
+                ],
+              },
+            }
+          },
           { loader: 'sass-loader', options: { implementation: require('sass'), sourceMap: true } },
         ]
       },

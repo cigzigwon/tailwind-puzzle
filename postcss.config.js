@@ -1,9 +1,9 @@
 module.exports = ({ env }) => {
   return {
     plugins: {
-      'tailwindcss': './tailwind.config.js',
+      'autoprefixer': {},
       'cssnano': env === 'development' ? false : { preset: 'default' },
-      'autoprefixer': {}
+      'tailwindcss': {},
     }
   }
 }
