@@ -125,7 +125,7 @@ const App = () => {
 
 	return (
 		<>
-			<div id="yes-drop" className="drag-drop h-6 w-6 bg-yellow-800"></div>
+			<div id="yes-drop" className="drag-drop h-8 w-8 bg-yellow-800"></div>
 			<div className="container mt-24 mx-auto px-6 md:w-1/3">
 				<h1 className="mb-6 text-3xl">DnD Mine Sweeper</h1>
 				{grid.map((y, y_key) => (
