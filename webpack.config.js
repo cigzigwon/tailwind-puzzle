@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin          = require('html-webpack-plugin');
+const MiniCssExtractPlugin       = require('mini-css-extract-plugin');
 
 const env = process.env.NODE_ENV;
 
