@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
-import interact from "interactjs"
 
 import '../sass/styles.sass'
 
@@ -46,72 +45,74 @@ const App = () => {
 	window.dragMoveListener = dragMoveListener
 
 	useEffect(() => {
-		/* The dragging code for '.draggable' from the demo above
-		 * applies to this demo as well so it doesn't have to be repeated. */
+		import("interactjs").then(({ default: interact }) => {
+		  /* The dragging code for '.draggable' from the demo above
+			 * applies to this demo as well so it doesn't have to be repeated. */
+			 
+			// enable draggables to be dropped into this
+			interact('.dropzone').dropzone({
+			  // only accept elements matching this CSS selector
+			  accept: '#yes-drop',
+			  // Require a 75% element overlap for a drop to be possible
+			  overlap: 0.75,
 
-		// enable draggables to be dropped into this
-		interact('.dropzone').dropzone({
-		  // only accept elements matching this CSS selector
-		  accept: '#yes-drop',
-		  // Require a 75% element overlap for a drop to be possible
-		  overlap: 0.75,
+			  // listen for drop related events:
 
-		  // listen for drop related events:
+			  ondropactivate: function (event) {
+			    // add active dropzone feedback
+			    event.target.classList.add('drop-active')
+			  },
+			  ondragenter: function (event) {
+			    var draggableElement = event.relatedTarget
+			    var dropzoneElement = event.target
 
-		  ondropactivate: function (event) {
-		    // add active dropzone feedback
-		    event.target.classList.add('drop-active')
-		  },
-		  ondragenter: function (event) {
-		    var draggableElement = event.relatedTarget
-		    var dropzoneElement = event.target
+			    // feedback the possibility of a drop
+			    dropzoneElement.classList.add('drop-target')
+			    draggableElement.classList.add('can-drop')
+			    // draggableElement.textContent = ' '
+			  },
+			  ondragleave: function (event) {
+			    // remove the drop feedback style
+			    event.target.classList.remove('drop-target')
+			    event.relatedTarget.classList.remove('can-drop')
+			    // event.target.classList.remove('dropped')
+			    // event.relatedTarget.textContent = ' '
+			  },
+			  ondrop: function (event) {
+			  	var dropzoneElement = event.target
+			    // dropzoneElement.textContent = ' '
+			    dropzoneElement.classList.add('dropped')
+			    dropzoneElement.classList.remove('bg-blue-400')
 
-		    // feedback the possibility of a drop
-		    dropzoneElement.classList.add('drop-target')
-		    draggableElement.classList.add('can-drop')
-		    // draggableElement.textContent = ' '
-		  },
-		  ondragleave: function (event) {
-		    // remove the drop feedback style
-		    event.target.classList.remove('drop-target')
-		    event.relatedTarget.classList.remove('can-drop')
-		    // event.target.classList.remove('dropped')
-		    // event.relatedTarget.textContent = ' '
-		  },
-		  ondrop: function (event) {
-		  	var dropzoneElement = event.target
-		    // dropzoneElement.textContent = ' '
-		    dropzoneElement.classList.add('dropped')
-		    dropzoneElement.classList.remove('bg-blue-400')
+			    if (dropzoneElement.classList.contains('xxx')) {
+			    	dropzoneElement.classList.add('bg-red-400')
+			    	dropzoneElement.classList.remove('xxx')
+			    	set_blasts(prev => ++prev)
+			    } else {
+			    	dropzoneElement.classList.add('bg-gray-300')
+			    }
+			  },
+			  ondropdeactivate: function (event) {
+			    // remove active dropzone feedback
+			    event.target.classList.remove('drop-active')
+			    event.target.classList.remove('drop-target')
+			  }
+			})
 
-		    if (dropzoneElement.classList.contains('xxx')) {
-		    	dropzoneElement.classList.add('bg-red-400')
-		    	dropzoneElement.classList.remove('xxx')
-		    	set_blasts(prev => ++prev)
-		    } else {
-		    	dropzoneElement.classList.add('bg-gray-300')
-		    }
-		  },
-		  ondropdeactivate: function (event) {
-		    // remove active dropzone feedback
-		    event.target.classList.remove('drop-active')
-		    event.target.classList.remove('drop-target')
-		  }
+			interact('.drag-drop')
+			  .draggable({
+			    inertia: true,
+			    modifiers: [
+			      interact.modifiers.restrictRect({
+			        restriction: 'parent',
+			        endOnly: true
+			      })
+			    ],
+			    autoScroll: true,
+			    // dragMoveListener from the dragging demo above
+			    listeners: { move: dragMoveListener }
+			  })
 		})
-
-		interact('.drag-drop')
-		  .draggable({
-		    inertia: true,
-		    modifiers: [
-		      interact.modifiers.restrictRect({
-		        restriction: 'parent',
-		        endOnly: true
-		      })
-		    ],
-		    autoScroll: true,
-		    // dragMoveListener from the dragging demo above
-		    listeners: { move: dragMoveListener }
-		  })
 	}, [])
 
 	useEffect(() => {

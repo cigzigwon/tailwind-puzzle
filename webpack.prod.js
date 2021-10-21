@@ -11,7 +11,9 @@ const purgeFromTailwind = content => content.match(/[\w-/:]+(?<!:)/g) || [];
 
 module.exports = merge(common, {
   mode: 'production',
-
+  output: {
+    path: path.resolve(__dirname, 'dist')
+  },
   devtool: false,
 
   plugins: [
