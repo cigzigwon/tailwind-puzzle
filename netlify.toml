@@ -1,2 +1,2 @@
 [context.production]
-  environment = { NODE_VERSION = '14.17.4', NODE_ENV=production }
+  environment = { NODE_VERSION = "14.17.4", NODE_ENV = "production" }
