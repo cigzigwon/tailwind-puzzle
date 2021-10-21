@@ -10,9 +10,9 @@ const getRandomInt = (max) => {
 var x_set = [0, 1, 2, 3, 4, 5]
 var y_set = Array.from(x_set)
 
-const max_bombs = 8
+const max_mines = 8
 const grid = Array.from(x_set).fill(Array.from(y_set).fill(0))
-const mines = new Array(max_bombs).fill().reduce((prev, curr) => {
+const mines = new Array(max_mines).fill().reduce((prev, curr) => {
 	const x_key = getRandomInt(x_set.length)
 	const y_key = getRandomInt(y_set.length)
 	const x = x_set[x_key]
@@ -48,7 +48,7 @@ const App = () => {
 		import("interactjs").then(({ default: interact }) => {
 		  /* The dragging code for '.draggable' from the demo above
 			 * applies to this demo as well so it doesn't have to be repeated. */
-			 
+
 			// enable draggables to be dropped into this
 			interact('.dropzone').dropzone({
 			  // only accept elements matching this CSS selector
@@ -116,7 +116,12 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (blasts >= mines.length) {
+		if (swept == (x_set.length * 2 - 1)) {
+			setTimeout(() => {
+				alert("YOU WIN! CONGRATS!")
+				location.reload()
+			}, 400)
+		} else if (blasts >= mines.length) {
 			setTimeout(() => {
 				alert("YOU LOSE")
 				location.reload()
