@@ -27,6 +27,7 @@ const mines = new Array(max_mines).fill().reduce((prev, curr) => {
 
 const App = () => {
 	const [blasts, set_blasts] = useState(0)
+	const [swept, set_swept] = useState(0)
 	const dragMoveListener = (event) => {
 	  var target = event.target
 	  // keep the dragged position in the data-x/data-y attributes
@@ -91,6 +92,8 @@ const App = () => {
 			    } else {
 			    	dropzoneElement.classList.add('bg-gray-300')
 			    }
+
+			    set_swept(prev => ++prev)
 			  },
 			  ondropdeactivate: function (event) {
 			    // remove active dropzone feedback
