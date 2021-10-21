@@ -4,6 +4,10 @@
 
 @tailwind utilities
 
+body
+  user-select: none
+  touch-action: none
+
 .dropzone
   border: dashed 2px transparent
   border-radius: 4px
@@ -34,3 +38,7 @@
   &.can-drop
     color: #000
     @apply bg-yellow-400
+
+#yes-drop
+  user-select: none
+  touch-action: none

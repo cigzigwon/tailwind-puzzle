@@ -1,17 +1,17 @@
 const HtmlWebpackPlugin          = require('html-webpack-plugin');
 const MiniCssExtractPlugin       = require('mini-css-extract-plugin');
 
-const env = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
-  mode: process.env.NODE_ENV,
+  mode: NODE_ENV,
 
   entry: './src/js/main.js',
 
   output: {
     publicPath: '/',
-    filename: env === 'development' ? 'js/[name].js' : 'js/bundle.[contenthash].min.js',
-    chunkFilename: env === 'development' ? 'js/[name].js' : 'js/[name].[contenthash].min.js'
+    filename: NODE_ENV === 'development' ? 'js/[name].js' : 'js/bundle.[contenthash].min.js',
+    chunkFilename: NODE_ENV === 'development' ? 'js/[name].js' : 'js/[name].[contenthash].min.js'
   },
 
   optimization: {
@@ -34,7 +34,7 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          env === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+          NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
           { loader: 'css-loader', options: { importLoaders: 2, sourceMap: true } },
           { loader: 'postcss-loader', options: {
             sourceMap: true,
