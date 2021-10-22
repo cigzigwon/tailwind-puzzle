@@ -27,7 +27,7 @@ const mines = new Array(max_mines).fill().reduce((prev, curr) => {
 
 const App = () => {
 	const [blasts, set_blasts] = useState(0)
-	const [swept, set_swept] = useState(0)
+	const [swept, set_swept] = useState([])
 	const dragMoveListener = (event) => {
 	  var target = event.target
 	  // keep the dragged position in the data-x/data-y attributes
@@ -85,6 +85,10 @@ const App = () => {
 			    dropzoneElement.classList.add('dropped')
 			    dropzoneElement.classList.remove('bg-blue-400')
 
+			    if (!dropzoneElement.classList.contains('bg-gray-300')) {
+			    	set_swept(prev => prev.concat([[parseInt(dropzoneElement.getAttribute('data-x')), parseInt(dropzoneElement.getAttribute('data-y'))]]))
+			    }
+
 			    if (dropzoneElement.classList.contains('xxx')) {
 			    	dropzoneElement.classList.add('bg-red-400')
 			    	dropzoneElement.classList.remove('xxx')
@@ -92,8 +96,6 @@ const App = () => {
 			    } else {
 			    	dropzoneElement.classList.add('bg-gray-300')
 			    }
-
-			    set_swept(prev => ++prev)
 			  },
 			  ondropdeactivate: function (event) {
 			    // remove active dropzone feedback
@@ -119,18 +121,22 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (swept == (x_set.length * 2 - 1)) {
-			setTimeout(() => {
-				alert("YOU WIN! CONGRATS!")
-				location.reload()
-			}, 400)
-		} else if (blasts >= mines.length) {
+		if (blasts >= mines.length) {
 			setTimeout(() => {
 				alert("YOU LOSE")
 				location.reload()
 			}, 400)
 		}
 	}, [blasts])
+
+	useEffect(() => {
+		if (swept.length >= ((x_set.length * y_set.length) - (mines.length - blasts))) {
+			setTimeout(() => {
+				alert("YOU WIN! CONGRATS!")
+				location.reload()
+			}, 400)
+		}
+	}, [swept])
 
 	return (
 		<>
@@ -144,7 +150,7 @@ const App = () => {
 					  	const classes = "dropzone inline-flex flex-grow items-center justify-center p-4 m-1 bg-blue-400" + (found ? " xxx" : "")
 
 					  	return (
-						  	<div key={x_key} className={classes}><span>&nbsp;</span></div>
+						  	<div key={x_key} data-x={x_key} data-y={y_key} className={classes}><span>&nbsp;</span></div>
 						  )
 					  })}
 					</div>
