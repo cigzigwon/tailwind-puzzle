@@ -147,6 +147,7 @@ const App = () => {
 			</div>
 			<div className="container mt-24 px-4 mx-auto w-full md:w-3/5 lg:w-1/3">
 				<h1 className="mb-6 text-3xl">DnD Mine Sweeper</h1>
+				<p className="mb-6">Drag and drop the eye icon to uncover the booby traps, you booby!</p>
 				{grid.map((y, y_key) => (
 					<div key={y_key} className="flex flex-row">
 					  {y.map((x, x_key) => {
