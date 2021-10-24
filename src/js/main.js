@@ -142,7 +142,7 @@ const App = () => {
 
 	return (
 		<>
-			<div id="sweeper" className="drag-drop h-8 w-8 bg-yellow-800 flex items-center justify-center">
+			<div id="sweeper" className="drag-drop h-8 w-8 bg-purple-600 flex items-center justify-center">
 				<EyeIcon className="h-4/5 w-4/5 text-white text-center" />
 			</div>
 			<div className="container mt-24 px-4 mx-auto w-full md:w-3/5 lg:w-1/3">
