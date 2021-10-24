@@ -6,7 +6,7 @@ const NODE_ENV = process.env.NODE_ENV;
 module.exports = {
   mode: NODE_ENV,
 
-  entry: './src/js/main.js',
+  entry: './src/js/index.js',
 
   output: {
     publicPath: '/',
@@ -57,7 +57,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'src/html/index.html'
+      template: 'public/index.html'
     }),
   ],
 }

@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react"
-import { Dialog } from "@headlessui/react"
-import ReactDOM from "react-dom"
 import { EyeIcon, ArrowsExpandIcon } from "@heroicons/react/outline"
+import DialogConfirm from "./DialogConfirm"
 
 import '../sass/styles.sass'
 
-const getRandomInt = (max) => {
+const get_random_integer = (max) => {
   return Math.floor(Math.random() * max)
 }
 
-var x_set = [0, 1, 2, 3, 4, 5]
-var y_set = Array.from(x_set)
-
-const colors = ['green', 'blue', 'pink', 'purple', 'pink', 'indigo', 'yellow']
-const primary_color = colors[getRandomInt(colors.length)]
 const max_mines = 8
+const x_set = [0, 1, 2, 3, 4, 5]
+const y_set = Array.from(x_set)
+const colors = [
+	'green',
+	'blue',
+	'pink',
+	'purple',
+	'pink',
+	'indigo',
+	'yellow'
+]
+const primary_color = colors[get_random_integer(colors.length)]
 const grid = Array.from(x_set).fill(Array.from(y_set).fill(0))
-const mines = new Array(max_mines).fill().reduce((prev, curr) => {
-	const x_key = getRandomInt(x_set.length)
-	const y_key = getRandomInt(y_set.length)
+
+const mine_generator = (prev, curr) => {
+	const x_key = get_random_integer(x_set.length)
+	const y_key = get_random_integer(y_set.length)
 	const x = x_set[x_key]
 	const y = y_set[y_key]
 
@@ -27,47 +34,22 @@ const mines = new Array(max_mines).fill().reduce((prev, curr) => {
 	}
 
 	return prev.concat([[x, y]])
-}, [])
-
-const DialogConfirm = ({ isOpen, setIsOpen, message }) => {
-  return (
-    <Dialog
-      open={isOpen}
-      onClose={() => {/* prevent */}}
-      className="fixed z-10 inset-0 overflow-y-auto"
-    >
-      <div className="flex items-center justify-center min-h-screen">
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-
-        <div className="relative bg-white rounded w-full md:w-1/3 mx-8 md:mx-auto py-4 px-6">
-          <Dialog.Title className="text-2xl mb-4">{ message }</Dialog.Title>
-          <p className="mb-4">Would you like to restart?</p>
-          <div className="flex flex-shrink justify-end">
-          	<button onClick={e => {
-          		location.reload()
-          	}} className={`inline-flex bg-${primary_color}-600 text-white rounded-full h-8 w-1/4 mr-4 px-4 justify-center items-center`}>Yes</button>
-          	<button onClick={e => {
-          		setIsOpen(false)
-          	}} className={`inline-flex bg-white text-${primary_color}-600 border-2 border-${primary_color}-600 rounded-full h-8 w-1/4 px-4 justify-center items-center`}>No</button>
-          </div>
-        </div>
-      </div>
-    </Dialog>
-  )
 }
+
+const mines = new Array(max_mines).fill().reduce(mine_generator, [])
 
 const App = () => {
 	const [game_state, set_game_state] = useState({
-		message: "Hello!",
+		message: "",
 	})
 	const [is_open, set_isopen] = useState(false)
 	const [blasts, set_blasts] = useState(0)
 	const [swept, set_swept] = useState(0)
-	const dragMoveListener = (event) => {
-	  var target = event.target
+	const on_dragmove = event => {
+	  const target = event.target
 	  // keep the dragged position in the data-x/data-y attributes
-	  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-	  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+	  const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+	  const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
 
 	  // translate the element
 	  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
@@ -78,7 +60,7 @@ const App = () => {
 	}
 
 	// this function is used later in the resizing and gesture demos
-	window.dragMoveListener = dragMoveListener
+	window.dragMoveListener = on_dragmove
 
 	useEffect(() => {
 		import("interactjs").then(({ default: interact }) => {
@@ -99,14 +81,14 @@ const App = () => {
 			    event.target.classList.add('drop-active')
 			  },
 			  ondragenter: function (event) {
-			    var draggableElement = event.relatedTarget
-			    var dropzoneElement = event.target
+			    const draggable_elem = event.relatedTarget
+			    const dropzone_elem = event.target
 
 			    // feedback the possibility of a drop
-			    dropzoneElement.classList.add('drop-target')
-			    dropzoneElement.classList.add(`bg-${primary_color}-600`)
-			    draggableElement.classList.add('can-drop')
-			    // draggableElement.textContent = ' '
+			    dropzone_elem.classList.add('drop-target')
+			    dropzone_elem.classList.add(`bg-${primary_color}-600`)
+			    draggable_elem.classList.add('can-drop')
+			    // draggable_elem.textContent = ' '
 			  },
 			  ondragleave: function (event) {
 			    // remove the drop feedback style
@@ -117,25 +99,25 @@ const App = () => {
 			    // event.relatedTarget.textContent = ' '
 			  },
 			  ondrop: function (event) {
-			  	var dropzoneElement = event.target
+			  	const dropzone_elem = event.target
 
 
-			    if (dropzoneElement.classList.contains('xxx')) {
-			    	dropzoneElement.innerHTML = '💣'
-			    	dropzoneElement.classList.add('bg-red-400')
-			    	dropzoneElement.classList.remove('xxx')
+			    if (dropzone_elem.classList.contains('xxx')) {
+			    	dropzone_elem.innerHTML = '💣'
+			    	dropzone_elem.classList.add('bg-red-400')
+			    	dropzone_elem.classList.remove('xxx')
 			    	set_blasts(prev => prev + 1)
 			    } else {
-			    	dropzoneElement.classList.add('bg-gray-300')
-			    	dropzoneElement.innerHTML = '✅'
+			    	dropzone_elem.classList.add('bg-gray-300')
+			    	dropzone_elem.innerHTML = '✅'
 			    }
 			    
-			  	if (dropzoneElement.classList.contains(`bg-${primary_color}-400`)) {
+			  	if (dropzone_elem.classList.contains(`bg-${primary_color}-400`)) {
 			  		set_swept(prev => prev + 1)
 			  	}
 
-			    dropzoneElement.classList.add('dropped')
-			    dropzoneElement.classList.remove(`bg-${primary_color}-400`)
+			    dropzone_elem.classList.add('dropped')
+			    dropzone_elem.classList.remove(`bg-${primary_color}-400`)
 			  },
 			  ondropdeactivate: function (event) {
 			    // remove active dropzone feedback
@@ -181,7 +163,7 @@ const App = () => {
 				<EyeIcon className="h-4/5 w-4/5 text-white text-center" />
 			</div>
 			<div className="container mt-24 px-4 mx-auto w-full md:w-3/5 lg:w-1/3">
-				<h1 className="mb-6 text-3xl">DnD Mine Sweeper</h1>
+				<h1 className={`mb-6 text-3xl text-${primary_color}-600`}>DnD Mine Sweeper</h1>
 				<p className="mb-6">Drag and drop the eye icon to uncover the booby traps (mines), you booby! There are <strong className={`font-semibold text-${primary_color}-500`}>{mines.length}</strong> of them.</p>
 				{grid.map((y, y_key) => (
 					<div key={y_key} className="flex flex-row">
@@ -196,9 +178,9 @@ const App = () => {
 					</div>
 				))}
 			</div>
-			<DialogConfirm isOpen={is_open} setIsOpen={set_isopen} {...game_state} />
+			<DialogConfirm is_open={is_open} set_isopen={set_isopen} primary_color={primary_color} {...game_state} />
 		</>
 	)
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"))
+export default App
