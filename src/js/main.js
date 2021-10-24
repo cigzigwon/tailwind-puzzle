@@ -82,23 +82,24 @@ const App = () => {
 			  },
 			  ondrop: function (event) {
 			  	var dropzoneElement = event.target
-			    // dropzoneElement.textContent = ' '
-			    dropzoneElement.classList.add('dropped')
-			    dropzoneElement.classList.remove('bg-blue-400')
 
-			    if (!dropzoneElement.classList.contains('bg-gray-300')) {
-			    	set_swept(prev => ++prev)
-			    }
 
 			    if (dropzoneElement.classList.contains('xxx')) {
 			    	dropzoneElement.innerHTML = '💣'
 			    	dropzoneElement.classList.add('bg-red-400')
 			    	dropzoneElement.classList.remove('xxx')
-			    	set_blasts(prev => ++prev)
+			    	set_blasts(prev => prev + 1)
 			    } else {
 			    	dropzoneElement.classList.add('bg-gray-300')
 			    	dropzoneElement.innerHTML = '✅'
 			    }
+			    
+			  	if (dropzoneElement.classList.contains('bg-blue-400')) {
+			  		set_swept(prev => prev + 1)
+			  	}
+
+			    dropzoneElement.classList.add('dropped')
+			    dropzoneElement.classList.remove('bg-blue-400')
 			  },
 			  ondropdeactivate: function (event) {
 			    // remove active dropzone feedback
@@ -124,31 +125,33 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (swept >= (x_set.length * y_set.length - 1) && blasts < mines.length) {
-			setTimeout(() => {
-				alert("YOU WIN! CONGRATS!")
-				location.reload()
-			}, 400)
-		} else if (blasts >= mines.length) {
+		if (swept < (x_set.length * y_set.length) && blasts >= mines.length) {
 			setTimeout(() => {
 				alert("YOU LOSE")
 				location.reload()
 			}, 400)
 		}
-	}, [swept])
+
+		if (swept >= (x_set.length * y_set.length - 1) && blasts < mines.length) {
+			setTimeout(() => {
+				alert("YOU WIN! CONGRATS!")
+				location.reload()
+			}, 400)
+		}
+	}, [swept, blasts])
 
 	return (
 		<>
 			<div id="sweeper" className="drag-drop h-8 w-8 bg-yellow-800 flex items-center justify-center">
 				<EyeIcon className="h-4/5 w-4/5 text-white text-center" />
 			</div>
-			<div className="container mt-24 px-4 mx-auto">
+			<div className="container mt-24 px-4 mx-auto w-full md:w-3/5 lg:w-1/3">
 				<h1 className="mb-6 text-3xl">DnD Mine Sweeper</h1>
 				{grid.map((y, y_key) => (
 					<div key={y_key} className="flex flex-row">
 					  {y.map((x, x_key) => {
 					  	const found = mines.find(([x, y]) => (x == x_key && y == y_key))
-					  	const classes = "h-12 md:h-24 w-12 md:w-24 dropzone inline-flex items-center justify-center p-4 m-1 bg-blue-400" + (found ? " xxx" : "")
+					  	const classes = "dropzone inline-flex flex-grow items-center justify-center p-2 lg:p-4 m-1 bg-blue-400" + (found ? " xxx" : "")
 
 					  	return (
 						  	<div key={x_key} data-x={x_key} data-y={y_key} className={classes}>❓</div>
