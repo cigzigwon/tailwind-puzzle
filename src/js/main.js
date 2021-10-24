@@ -11,6 +11,8 @@ const getRandomInt = (max) => {
 var x_set = [0, 1, 2, 3, 4, 5]
 var y_set = Array.from(x_set)
 
+const colors = ['green', 'blue', 'pink', 'purple', 'pink', 'indigo', 'yellow']
+const primary_color = colors[getRandomInt(colors.length)]
 const max_mines = 8
 const grid = Array.from(x_set).fill(Array.from(y_set).fill(0))
 const mines = new Array(max_mines).fill().reduce((prev, curr) => {
@@ -70,12 +72,14 @@ const App = () => {
 
 			    // feedback the possibility of a drop
 			    dropzoneElement.classList.add('drop-target')
+			    dropzoneElement.classList.add(`bg-${primary_color}-600`)
 			    draggableElement.classList.add('can-drop')
 			    // draggableElement.textContent = ' '
 			  },
 			  ondragleave: function (event) {
 			    // remove the drop feedback style
 			    event.target.classList.remove('drop-target')
+			    event.target.classList.remove(`bg-${primary_color}-600`)
 			    event.relatedTarget.classList.remove('can-drop')
 			    // event.target.classList.remove('dropped')
 			    // event.relatedTarget.textContent = ' '
@@ -94,17 +98,18 @@ const App = () => {
 			    	dropzoneElement.innerHTML = '✅'
 			    }
 			    
-			  	if (dropzoneElement.classList.contains('bg-blue-400')) {
+			  	if (dropzoneElement.classList.contains(`bg-${primary_color}-400`)) {
 			  		set_swept(prev => prev + 1)
 			  	}
 
 			    dropzoneElement.classList.add('dropped')
-			    dropzoneElement.classList.remove('bg-blue-400')
+			    dropzoneElement.classList.remove(`bg-${primary_color}-400`)
 			  },
 			  ondropdeactivate: function (event) {
 			    // remove active dropzone feedback
 			    event.target.classList.remove('drop-active')
 			    event.target.classList.remove('drop-target')
+			    event.target.classList.remove(`bg-${primary_color}-600`)
 			  }
 			})
 
@@ -144,17 +149,17 @@ const App = () => {
 
 	return (
 		<>
-			<div id="sweeper" className="drag-drop h-8 w-8 bg-purple-600 flex items-center justify-center">
+			<div id="sweeper" className="drag-drop h-8 w-8 bg-gray-900 flex items-center justify-center">
 				<EyeIcon className="h-4/5 w-4/5 text-white text-center" />
 			</div>
 			<div className="container mt-24 px-4 mx-auto w-full md:w-3/5 lg:w-1/3">
 				<h1 className="mb-6 text-3xl">DnD Mine Sweeper</h1>
-				<p className="mb-6">Drag and drop the eye icon to uncover the booby traps, you booby!</p>
+				<p className="mb-6">Drag and drop the eye icon to uncover the booby traps (mines), you booby! There are <strong className={`font-semibold text-${primary_color}-500`}>{mines.length}</strong> of them.</p>
 				{grid.map((y, y_key) => (
 					<div key={y_key} className="flex flex-row">
 					  {y.map((x, x_key) => {
 					  	const found = mines.find(([x, y]) => (x == x_key && y == y_key))
-					  	const classes = "dropzone inline-flex flex-grow items-center justify-center p-2 lg:p-4 m-1 bg-blue-400" + (found ? " xxx" : "")
+					  	const classes = `dropzone inline-flex flex-grow items-center justify-center p-2 lg:p-4 m-1 bg-${primary_color}-400` + (found ? " xxx" : "")
 
 					  	return (
 						  	<div key={x_key} data-x={x_key} data-y={y_key} className={classes}>❓</div>
