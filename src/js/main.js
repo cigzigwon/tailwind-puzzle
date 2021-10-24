@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
+import { Dialog } from "@headlessui/react"
 import ReactDOM from "react-dom"
-import { EyeIcon, ArrowsExpandIcon } from '@heroicons/react/outline'
+import { EyeIcon, ArrowsExpandIcon } from "@heroicons/react/outline"
 
 import '../sass/styles.sass'
 
@@ -28,7 +29,38 @@ const mines = new Array(max_mines).fill().reduce((prev, curr) => {
 	return prev.concat([[x, y]])
 }, [])
 
+const DialogConfirm = ({ isOpen, setIsOpen, message }) => {
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={() => {/* prevent */}}
+      className="fixed z-10 inset-0 overflow-y-auto"
+    >
+      <div className="flex items-center justify-center min-h-screen">
+        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+        <div className="relative bg-white rounded w-full md:w-1/3 mx-8 md:mx-auto py-4 px-6">
+          <Dialog.Title className="text-2xl mb-4">{ message }</Dialog.Title>
+          <p className="mb-4">Would you like to restart?</p>
+          <div className="flex flex-shrink justify-end">
+          	<button onClick={e => {
+          		location.reload()
+          	}} className={`inline-flex bg-${primary_color}-600 text-white rounded-full h-8 w-1/4 mr-4 px-4 justify-center items-center`}>Yes</button>
+          	<button onClick={e => {
+          		setIsOpen(false)
+          	}} className={`inline-flex bg-white text-${primary_color}-600 border-2 border-${primary_color}-600 rounded-full h-8 w-1/4 px-4 justify-center items-center`}>No</button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
+  )
+}
+
 const App = () => {
+	const [game_state, set_game_state] = useState({
+		message: "Hello!",
+	})
+	const [is_open, set_isopen] = useState(false)
 	const [blasts, set_blasts] = useState(0)
 	const [swept, set_swept] = useState(0)
 	const dragMoveListener = (event) => {
@@ -131,19 +163,15 @@ const App = () => {
 
 	useEffect(() => {
 		if (blasts >= mines.length) {
-			setTimeout(() => {
-				alert("YOU LOSE")
-				location.reload()
-			}, 200)
+			set_game_state({ message: "You Lose!!!" })
+			set_isopen(true)
 		}
 	}, [blasts])
 
 	useEffect(() => {
 		if (swept >= (x_set.length * y_set.length - 1) && blasts < mines.length) {
-			setTimeout(() => {
-				alert("YOU WIN! CONGRATS!")
-				location.reload()
-			}, 200)
+			set_game_state({ message: "You Win!!! Congrats!!" })
+			set_isopen(true)
 		}
 	}, [swept])
 
@@ -168,6 +196,7 @@ const App = () => {
 					</div>
 				))}
 			</div>
+			<DialogConfirm isOpen={is_open} setIsOpen={set_isopen} {...game_state} />
 		</>
 	)
 }
