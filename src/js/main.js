@@ -125,20 +125,22 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (swept < (x_set.length * y_set.length) && blasts >= mines.length) {
+		if (blasts >= mines.length) {
 			setTimeout(() => {
 				alert("YOU LOSE")
 				location.reload()
-			}, 400)
+			}, 200)
 		}
+	}, [blasts])
 
+	useEffect(() => {
 		if (swept >= (x_set.length * y_set.length - 1) && blasts < mines.length) {
 			setTimeout(() => {
 				alert("YOU WIN! CONGRATS!")
 				location.reload()
-			}, 400)
+			}, 200)
 		}
-	}, [swept, blasts])
+	}, [swept])
 
 	return (
 		<>
