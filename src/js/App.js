@@ -207,9 +207,9 @@ const App = () => {
 							<div>Lost</div>
 						</div>
 						<div className="flex justify-around">
-							<strong className={`text-${primary_color}-600 py-1`}>{ won }</strong>
+							<strong className={`text-green-500 py-1`}>{ won }</strong>
 							<div className="flex-shrink border-gray-900 border-r"></div>
-							<strong className="py-1">{ lost }</strong>
+							<strong className="py-1 text-red-500">{ lost }</strong>
 						</div>
 					</div>
 				</div>
