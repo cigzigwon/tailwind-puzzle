@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Dialog } from "@headlessui/react"
 
-const DialogConfirm = ({ is_open, set_isopen, message, primary_color }) => {
+const DialogConfirm = ({ is_open, set_isopen, message, primary_color, reset_game }) => {
   return (
     <Dialog
       open={is_open}
@@ -16,7 +16,7 @@ const DialogConfirm = ({ is_open, set_isopen, message, primary_color }) => {
           <p className="mb-4">Would you like to restart the game?</p>
           <div className="flex flex-shrink justify-end">
           	<button onClick={e => {
-          		location.reload()
+          		reset_game()
           	}} className={`inline-flex bg-${primary_color}-600 text-white rounded-full h-8 w-1/4 mr-4 px-4 justify-center items-center`}>Yes</button>
           	<button onClick={e => {
           		set_isopen(false)
