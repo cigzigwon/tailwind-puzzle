@@ -53,13 +53,8 @@ const use_interact = ({ dropzone, draggable }) => {
 
 	const on_dragmove = event => {
 	  const target = event.target
-	  // keep the dragged position in the data-x/data-y attributes
-	  x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-	  y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
-
-	  // update the posiion attributes
-	  target.setAttribute('data-x', x)
-	  target.setAttribute('data-y', y)
+	  x += event.dx
+	  y += event.dy
 
 	  set_position([x, y])
 	}
@@ -67,11 +62,6 @@ const use_interact = ({ dropzone, draggable }) => {
 	draggable.listeners = { move: on_dragmove }
 
 	useEffect(() => {
-		/* The dragging code for '.draggable' from the demo above
-		 * applies to this demo as well so it doesn't have to be repeated.
-		 */
-
-		// enable draggables to be dropped into this
 		interact(dz_ref.current).dropzone(dropzone)
 
 		interact(dnd_ref.current)
