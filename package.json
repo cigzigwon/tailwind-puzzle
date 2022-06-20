@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "webpack serve --host 0.0.0.0 --port 3000 --hot --config webpack.config.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "browserslist": "npx browserslist@latest --update-db"
   },
   "eslintConfig": {
     "extends": "react-app"
