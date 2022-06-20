@@ -194,6 +194,7 @@ const App = () => {
 		}
 	}, [swept])
 
+  // reset state container on ever re-render or we end up with stale states
 	dz_ref.current = []
 
 	return (
